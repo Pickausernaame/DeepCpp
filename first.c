@@ -21,7 +21,8 @@ char** parser(char** input, int size){
                 if (strlen(input[i]) == strlen(strstr(input[i], find[j]))) {
                     outsize++;
                     output = (char**)realloc(output, outsize*sizeof(char*));
-                    output[outsize - 1] = (char*)malloc(sizeof(input[i]) + 5);
+                    // Костыль
+                    output[outsize - 1] = (char*)malloc(strlen(input[i])+1);
                     strcpy(output[outsize - 1], input[i]);
                 }
             }
@@ -60,8 +61,7 @@ lines* getlines() {
         
         if (c == '\n') { // записывем строку str в массив строк
 
-            // без этих трех строк валгринд меня опрокидывает
-            // 
+            // без этих трех строк(без проверки) валгринд меня опрокидывает
             sizeos++;
             inputlines->value[sizeoa - 1] = (char*)realloc(inputlines->value[sizeoa - 1], sizeos*sizeof(char));
             if (!inputlines->value[sizeoa -1]) {
@@ -74,6 +74,8 @@ lines* getlines() {
                 return NULL;
             }
             inputlines->value[sizeoa - 1][sizeos - 1]  = '\0';
+
+
             sizeos = 0;
             sizeoa++;
             inputlines->value = (char**)realloc(inputlines->value, sizeoa * sizeof(char*));
@@ -92,7 +94,7 @@ lines* getlines() {
         }
         else { // Считываем строку
             sizeos++;
-            inputlines->value[sizeoa - 1] = (char*)realloc(inputlines->value[sizeoa - 1], sizeos * sizeof(char));
+            inputlines->value[sizeoa - 1] = (char*)realloc(inputlines->value[sizeoa - 1], sizeos*sizeof(char));
             if (!inputlines->value[sizeoa - 1]) {
                 for(int i = 0; i < sizeoa - 1; i++) {
                     free(inputlines->value[i]);
